@@ -181,7 +181,7 @@ public class computation {
             }
             while (!check) {
                 check = true;
-                System.out.println("Enter value" + " " + c);
+                System.out.println("Enter value " + c);
                 String str = reader.readLine();
                 for (int i = 0; i < str.length(); i++) {
                     if (!Character.isDigit(str.charAt(i))) {
