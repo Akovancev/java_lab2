@@ -2,15 +2,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Класс вычисления значения выражения полученного в виде строки
+ * @author Павел Акованцев
+ */
 public class computation {
+    /** Поле символы встречающиеся в выражении */
     private static char[] symbols;
+    /** Поле значения символов встречающихся в выражении */
     private static int[] symbols_d;
+    /** Поле количество символов встречающихся в выражении */
     private static int count_s = 0;
 
+    /**
+     * Функция вывода сообщения об ошибке ввода
+     */
     private static void errorMessage() {
         System.out.println("Error");
     }
 
+    /**
+     * Функция добавления операции с высоким приоритетом в дерево
+     * @param t - дерево
+     * @param str - выражение
+     * @param priority - приоритет операции
+     * @param digit - число
+     */
     private static Tree AddHighPriority(Tree t, String str, int priority, String digit) {
         if (t.getPriority() < priority) {
             if (t.getRight() != null)
@@ -41,6 +58,10 @@ public class computation {
         return t;
     }
 
+    /**
+     * Функция преобразования строки-выражения в дерево-выражение
+     * @param str - строка-выражение
+     */
     public static Tree transform(String str) {
         symbols = new char[str.length()];
         symbols_d = new int[str.length()];
@@ -164,6 +185,10 @@ public class computation {
         return res;
     }
 
+    /**
+     * Функция замены переменных в дереве-выражении на их числовые значения
+     * @param tree - дерево-выражение
+     */
     public static Tree character_replacement(Tree tree) throws IOException {
         BufferedReader reader = new BufferedReader (new InputStreamReader(System.in));
         if (Character.isLetter(tree.getElem().charAt(0)))
@@ -211,6 +236,10 @@ public class computation {
     }
 
 
+    /**
+     * Функция вычисления значения дерева-выражения
+     * @param tree - дерево-выражение
+     */
     public static double calculate(Tree tree)
     {
         if (tree.getElem().charAt(0) == '+')
