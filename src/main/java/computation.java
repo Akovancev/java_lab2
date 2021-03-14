@@ -10,8 +10,6 @@ public class computation {
                 Tree temp2 = new Tree(digit, priority, null, null);
                 t = new Tree(str, priority, temp1, temp2);
             }
-            //if (t.getLeft() != null)
-               // t.setLeft(AddHighPriority(t.getLeft(), str, priority, digit));
         }
         else if (t.getPriority() == priority)
         {
@@ -22,6 +20,12 @@ public class computation {
             Tree right = new Tree(digit, priority, null, null);
             temp1 = new Tree(str, priority, left, right);
             t.setRight(temp1);
+        }
+        else
+        {
+            Tree temp1 = t;
+            Tree temp2 = new Tree(digit, priority, null, null);
+            t = new Tree(str, priority, temp1, temp2);
         }
         return t;
     }
@@ -84,27 +88,6 @@ public class computation {
             //System.out.println(digit);
             if (priority <= res.getPriority() || Character.isDigit(res.getElem().charAt(0)))
             {
-                /*
-                Tree right = res.getRight();
-                Tree left = res.getLeft();
-                if (right != null && left != null && Character.isDigit(right.getElem().charAt(0)) && !Character.isDigit(left.getElem().charAt(0))) {
-                    Tree temp1 = new Tree(right.getElem(), priority, null,null);
-                    Tree temp2 = new Tree(Integer.toString(digit), priority, null,null);
-                    right = new Tree(c, priority, temp1, temp2);
-                    res.setRight(right);
-                }
-                else if (right != null && left != null && !Character.isDigit(right.getElem().charAt(0)) && Character.isDigit(left.getElem().charAt(0))) {
-                    Tree temp1 = new Tree(left.getElem(), priority, null,null);
-                    Tree temp2 = new Tree(Integer.toString(digit), priority, null,null);
-                    left = new Tree(c, priority, temp1, temp2);
-                    res.setLeft(left);
-                }
-                else {
-                    left = res;
-                    right = new Tree(Integer.toString(digit), priority, null, null);
-                    res = new Tree(c, priority, left, right);
-                }
-                */
                 Tree left = res;
                 Tree right = new Tree(digit, priority, null, null);
                 res = new Tree(c, priority, left, right);
@@ -123,11 +106,11 @@ public class computation {
         if (tree.getElem().charAt(0) == '+')
             return calculate(tree.getRight()) + calculate(tree.getLeft());
         if (tree.getElem().charAt(0) == '-')
-            return calculate(tree.getRight()) - calculate(tree.getLeft());
+            return calculate(tree.getLeft()) - calculate(tree.getRight());
         if (tree.getElem().charAt(0) == '*')
             return calculate(tree.getRight()) * calculate(tree.getLeft());
         if (tree.getElem().charAt(0) == '/')
-            return calculate(tree.getRight()) / calculate(tree.getLeft());
+            return calculate(tree.getLeft()) / calculate(tree.getRight());
         if (Character.isDigit(tree.getElem().charAt(0)))
             return Integer.parseInt(tree.getElem());
         else return 0;
