@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class computation {
+    private static char[] symbols;
+    private static int[] symbols_d;
+    private static int count_s = 0;
 
     private static void errorMessage() {
         System.out.println("Error");
@@ -39,6 +42,12 @@ public class computation {
     }
 
     public static Tree transform(String str) {
+        symbols = new char[str.length()];
+        symbols_d = new int[str.length()];
+        for (int i = 0; i < str.length(); i++)
+        {
+            symbols_d[i] = -1;
+        }
         int base_priority = 0;
         int i = 0;
         while (str.charAt(i) == '(') {
@@ -48,6 +57,8 @@ public class computation {
         String digit = "";
         if (Character.isLetter(str.charAt(i)))
         {
+            symbols[count_s] = str.charAt(i);
+            count_s++;
             digit += str.charAt(i);
             i++;
         }
@@ -117,6 +128,8 @@ public class computation {
             digit = "";
             if (i < str.length() && Character.isLetter(str.charAt(i)))
             {
+                symbols[count_s] = str.charAt(i);
+                count_s++;
                 digit += str.charAt(i);
                 i++;
             }
@@ -155,10 +168,20 @@ public class computation {
         BufferedReader reader = new BufferedReader (new InputStreamReader(System.in));
         if (Character.isLetter(tree.getElem().charAt(0)))
         {
-            boolean check = true;
-            do {
+            boolean check = false;
+            char c = tree.getElem().charAt(0);
+            for (int i = 0; i < count_s; i++)
+            {
+                if (symbols[i] == c && symbols_d[i] != -1)
+                {
+                    check = true;
+                    tree.setElem(Integer.toString(symbols_d[i]));
+                    break;
+                }
+            }
+            while (!check) {
                 check = true;
-                System.out.println("Enter value" + " " + tree.getElem());
+                System.out.println("Enter value" + " " + c);
                 String str = reader.readLine();
                 for (int i = 0; i < str.length(); i++) {
                     if (!Character.isDigit(str.charAt(i))) {
@@ -170,9 +193,17 @@ public class computation {
                     errorMessage();
                 else
                 {
+                    for (int i = 0; i < count_s; i++)
+                    {
+                        if (symbols[i] == c)
+                        {
+                            symbols_d[i] = Integer.parseInt(str);
+                            break;
+                        }
+                    }
                     tree.setElem(str);
                 }
-            } while (!check);
+            }
         }
         if (tree.getLeft() != null) tree.setLeft(computation.character_replacement(tree.getLeft()));
         if (tree.getRight() != null) tree.setRight(computation.character_replacement(tree.getRight()));
