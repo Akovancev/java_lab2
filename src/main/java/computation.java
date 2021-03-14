@@ -1,5 +1,9 @@
 public class computation {
 
+    private static void errorMessage() {
+        System.out.println("Error");
+    }
+
     private static Tree AddHighPriority(Tree t, String str, int priority, String digit) {
         if (t.getPriority() < priority) {
             if (t.getRight() != null)
@@ -42,6 +46,10 @@ public class computation {
             digit += str.charAt(i);
             i++;
         }
+        if (digit == "") {
+            errorMessage();
+            return null;
+        }
         Tree res = new Tree(digit, base_priority * 2, null, null);
         while (i < str.length()) {
             int priority = base_priority * 2;;
@@ -53,22 +61,32 @@ public class computation {
                 base_priority--;
                 i++;
             }
+            if (base_priority < 0)
+            {
+                errorMessage();
+                return null;
+            }
+            if (i >= str.length()) break;
             String c = "&";
             if (i < str.length() && str.charAt(i) == '+') {
                 c = "+";
                 priority = base_priority * 2;
             }
-            if (i < str.length() && str.charAt(i) == '*') {
+            else if (i < str.length() && str.charAt(i) == '*') {
                 c = "*";
                 priority = base_priority * 2 + 1;
             }
-            if (i < str.length() && str.charAt(i) == '-') {
+            else if (i < str.length() && str.charAt(i) == '-') {
                 c = "-";
                 priority = base_priority * 2;
             }
-            if (i < str.length() && str.charAt(i) == '/') {
+            else if (i < str.length() && str.charAt(i) == '/') {
                 c = "/";
                 priority = base_priority * 2 + 1;
+            }
+            else {
+                errorMessage();
+                return null;
             }
             i++;
             while (i < str.length() && str.charAt(i) == '(') {
@@ -79,13 +97,20 @@ public class computation {
                 base_priority--;
                 i++;
             }
+            if (base_priority < 0)
+            {
+                errorMessage();
+                return null;
+            }
             digit = "";
             while (i < str.length() && Character.isDigit(str.charAt(i))) {
                 digit += str.charAt(i);
                 i++;
             }
-            if (digit == "" || c == "&") break;
-            //System.out.println(digit);
+            if (digit == "") {
+                errorMessage();
+                return null;
+            }
             if (priority <= res.getPriority() || Character.isDigit(res.getElem().charAt(0)))
             {
                 Tree left = res;
@@ -97,6 +122,11 @@ public class computation {
             {
                 res = AddHighPriority(res, c, priority, digit);
             }
+        }
+        if (base_priority != 0)
+        {
+            errorMessage();
+            return null;
         }
         return res;
     }
