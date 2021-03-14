@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class computation {
 
     private static void errorMessage() {
@@ -42,9 +46,17 @@ public class computation {
             i++;
         }
         String digit = "";
-        while (Character.isDigit(str.charAt(i))) {
+        if (Character.isLetter(str.charAt(i)))
+        {
             digit += str.charAt(i);
             i++;
+        }
+        else
+        {
+            while (Character.isDigit(str.charAt(i))) {
+                digit += str.charAt(i);
+                i++;
+            }
         }
         if (digit == "") {
             errorMessage();
@@ -103,9 +115,17 @@ public class computation {
                 return null;
             }
             digit = "";
-            while (i < str.length() && Character.isDigit(str.charAt(i))) {
+            if (i < str.length() && Character.isLetter(str.charAt(i)))
+            {
                 digit += str.charAt(i);
                 i++;
+            }
+            else
+            {
+                while (i < str.length() && Character.isDigit(str.charAt(i))) {
+                    digit += str.charAt(i);
+                    i++;
+                }
             }
             if (digit == "") {
                 errorMessage();
@@ -130,6 +150,35 @@ public class computation {
         }
         return res;
     }
+
+    public static Tree character_replacement(Tree tree) throws IOException {
+        BufferedReader reader = new BufferedReader (new InputStreamReader(System.in));
+        if (Character.isLetter(tree.getElem().charAt(0)))
+        {
+            boolean check = true;
+            do {
+                check = true;
+                System.out.println("Enter value" + " " + tree.getElem());
+                String str = reader.readLine();
+                for (int i = 0; i < str.length(); i++) {
+                    if (!Character.isDigit(str.charAt(i))) {
+                        check = false;
+                        break;
+                    }
+                }
+                if (!check)
+                    errorMessage();
+                else
+                {
+                    tree.setElem(str);
+                }
+            } while (!check);
+        }
+        if (tree.getLeft() != null) tree.setLeft(computation.character_replacement(tree.getLeft()));
+        if (tree.getRight() != null) tree.setRight(computation.character_replacement(tree.getRight()));
+        return tree;
+    }
+
 
     public static double calculate(Tree tree)
     {

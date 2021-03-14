@@ -50,7 +50,7 @@ public class Tree {
     }
 
     public static void printTree(Tree tree) {
-        System.out.println(tree.getElem() + " " + tree.getPriority());
+        System.out.println(tree.getElem());
         if (tree.getLeft() != null)
             printTree(tree.getLeft());
         if (tree.getRight() != null)
