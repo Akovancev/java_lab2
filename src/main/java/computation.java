@@ -1,23 +1,36 @@
 public class computation {
 
-    private static Tree AddHighPriority(Tree t, String str, String digit) {
-        if (t.getRight() != null)
-            t.setRight(AddHighPriority(t.getRight(), str, digit));
-        else if (t.getLeft() != null)
-            t.setLeft(AddHighPriority(t.getLeft(), str, digit));
-        else {
-            Tree temp1 = t;
-            Tree temp2 = new Tree(digit, 1, null, null);
-            t = new Tree(str, 1, temp1, temp2);
+    private static Tree AddHighPriority(Tree t, String str, int priority, String digit) {
+        if (t.getPriority() < priority) {
+            if (t.getRight() != null)
+                t.setRight(AddHighPriority(t.getRight(), str, priority, digit));
+            else
+            {
+                Tree temp1 = t;
+                Tree temp2 = new Tree(digit, priority, null, null);
+                t = new Tree(str, priority, temp1, temp2);
+            }
+            //if (t.getLeft() != null)
+               // t.setLeft(AddHighPriority(t.getLeft(), str, priority, digit));
+        }
+        else if (t.getPriority() == priority)
+        {
+            Tree temp1 = t.getRight();
+            Tree temp2 = t.getLeft();
+            t.setLeft(temp1);
+            Tree left = new Tree(temp2.getElem(), temp2.getPriority(), null, null);
+            Tree right = new Tree(digit, priority, null, null);
+            temp1 = new Tree(str, priority, left, right);
+            t.setRight(temp1);
         }
         return t;
     }
 
     public static Tree transform(String str) {
-        int priority = 0;
+        int base_priority = 0;
         int i = 0;
         while (str.charAt(i) == '(') {
-            priority++;
+            base_priority ++;
             i++;
         }
         String digit = "";
@@ -25,33 +38,51 @@ public class computation {
             digit += str.charAt(i);
             i++;
         }
-        Tree res = new Tree(digit, priority, null, null);
+        Tree res = new Tree(digit, base_priority * 2, null, null);
         while (i < str.length()) {
+            int priority = base_priority * 2;;
+            while (i < str.length() && str.charAt(i) == '(') {
+                base_priority++;
+                i++;
+            }
+            while (i < str.length() && str.charAt(i) == ')') {
+                base_priority--;
+                i++;
+            }
             String c = "&";
-            if (str.charAt(i) == '+') {
+            if (i < str.length() && str.charAt(i) == '+') {
                 c = "+";
-                priority = 0;
+                priority = base_priority * 2;
             }
-            if (str.charAt(i) == '*') {
+            if (i < str.length() && str.charAt(i) == '*') {
                 c = "*";
-                priority++;
+                priority = base_priority * 2 + 1;
             }
-            if (str.charAt(i) == '-') {
+            if (i < str.length() && str.charAt(i) == '-') {
                 c = "-";
-                priority = 0;
+                priority = base_priority * 2;
             }
-            if (str.charAt(i) == '/') {
+            if (i < str.length() && str.charAt(i) == '/') {
                 c = "/";
-                priority++;
+                priority = base_priority * 2 + 1;
             }
             i++;
+            while (i < str.length() && str.charAt(i) == '(') {
+                base_priority++;
+                i++;
+            }
+            while (i < str.length() && str.charAt(i) == ')') {
+                base_priority--;
+                i++;
+            }
             digit = "";
             while (i < str.length() && Character.isDigit(str.charAt(i))) {
                 digit += str.charAt(i);
                 i++;
-            };
+            }
+            if (digit == "" || c == "&") break;
             //System.out.println(digit);
-            if (priority <= res.getPriority())
+            if (priority <= res.getPriority() || Character.isDigit(res.getElem().charAt(0)))
             {
                 /*
                 Tree right = res.getRight();
@@ -81,10 +112,9 @@ public class computation {
             }
             else
             {
-                res = AddHighPriority(res, c, digit);
+                res = AddHighPriority(res, c, priority, digit);
             }
         }
         return res;
     }
-
 }
