@@ -117,4 +117,19 @@ public class computation {
         }
         return res;
     }
+
+    public static double calculate(Tree tree)
+    {
+        if (tree.getElem().charAt(0) == '+')
+            return calculate(tree.getRight()) + calculate(tree.getLeft());
+        if (tree.getElem().charAt(0) == '-')
+            return calculate(tree.getRight()) - calculate(tree.getLeft());
+        if (tree.getElem().charAt(0) == '*')
+            return calculate(tree.getRight()) * calculate(tree.getLeft());
+        if (tree.getElem().charAt(0) == '/')
+            return calculate(tree.getRight()) / calculate(tree.getLeft());
+        if (Character.isDigit(tree.getElem().charAt(0)))
+            return Integer.parseInt(tree.getElem());
+        else return 0;
+    }
 }
