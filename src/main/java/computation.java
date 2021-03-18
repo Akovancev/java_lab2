@@ -41,13 +41,26 @@ public class computation {
         }
         else if (t.getPriority() == priority)
         {
-            Tree temp1 = t.getRight();
-            Tree temp2 = t.getLeft();
-            t.setLeft(temp1);
-            Tree left = new Tree(temp2.getElem(), temp2.getPriority(), null, null);
-            Tree right = new Tree(digit, priority, null, null);
-            temp1 = new Tree(str, priority, left, right);
-            t.setRight(temp1);
+            if (str == "-" && t.getElem() == "-")
+            {
+                str = "+";
+            }
+            if (str == "/" && t.getElem() == "/")
+            {
+                str = "*";
+            }
+            if (!Character.isDigit(t.getRight().getElem().charAt(0)) && t.getRight().getPriority() == priority)
+            {
+                t.setRight(AddHighPriority(t.getRight(), str, priority, digit));
+            }
+            else
+            {
+
+                Tree temp1 = t.getRight();
+                Tree temp2 = new Tree(digit, priority, null, null);
+                Tree temp3 = new Tree(str, priority, temp1, temp2);
+                t.setRight(temp3);
+            }
         }
         else
         {
@@ -94,9 +107,9 @@ public class computation {
             errorMessage();
             return null;
         }
-        Tree res = new Tree(digit, base_priority * 2, null, null);
+        Tree res = new Tree(digit, base_priority * 4, null, null);
         while (i < str.length()) {
-            int priority = base_priority * 2;;
+            int priority = base_priority * 4;;
             while (i < str.length() && str.charAt(i) == '(') {
                 base_priority++;
                 i++;
@@ -114,19 +127,19 @@ public class computation {
             String c = "&";
             if (i < str.length() && str.charAt(i) == '+') {
                 c = "+";
-                priority = base_priority * 2;
+                priority = base_priority * 4;
             }
             else if (i < str.length() && str.charAt(i) == '*') {
                 c = "*";
-                priority = base_priority * 2 + 1;
+                priority = base_priority * 4 + 2;
             }
             else if (i < str.length() && str.charAt(i) == '-') {
                 c = "-";
-                priority = base_priority * 2;
+                priority = base_priority * 4 + 1;
             }
             else if (i < str.length() && str.charAt(i) == '/') {
                 c = "/";
-                priority = base_priority * 2 + 1;
+                priority = base_priority * 4 + 3;
             }
             else {
                 errorMessage();
@@ -243,11 +256,11 @@ public class computation {
     public static double calculate(Tree tree)
     {
         if (tree.getElem().charAt(0) == '+')
-            return calculate(tree.getRight()) + calculate(tree.getLeft());
+            return calculate(tree.getLeft()) + calculate(tree.getRight());
         if (tree.getElem().charAt(0) == '-')
             return calculate(tree.getLeft()) - calculate(tree.getRight());
         if (tree.getElem().charAt(0) == '*')
-            return calculate(tree.getRight()) * calculate(tree.getLeft());
+            return calculate(tree.getLeft()) * calculate(tree.getRight());
         if (tree.getElem().charAt(0) == '/')
             return calculate(tree.getLeft()) / calculate(tree.getRight());
         if (Character.isDigit(tree.getElem().charAt(0)))
